@@ -24,10 +24,6 @@ public class InstructorHomePage {
         this.questionManager = questionManager;
     }
 
-    /**
-     * Displays the student home page in the provided primary stage.
-     * @param primaryStage The primary stage where the scene will be displayed.
-     */
     public void show(CustomTrackedStage primaryStage) {
         BorderPane borderPane = new BorderPane();
 
@@ -39,6 +35,7 @@ public class InstructorHomePage {
         Label userLabel = new Label("Hello, Instructor!");
         userLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         
+        // main page
         Button manageButton = new Button("Manage");
         manageButton.setOnAction(e -> {
         	new InstructorReviewerManagerPage(databaseHelper, questionManager, currentUser).show(primaryStage);

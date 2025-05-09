@@ -23,11 +23,12 @@ public class PrivateMessagingPage {
         this.currentUser = currentUser;
     }
 
-    public void show(CustomTrackedStage primaryStage) {
+    public void show(CustomTrackedStage primaryStage) { // custom stage
         BorderPane root = new BorderPane();
         root.setPadding(new Insets(10));
         root.setStyle("-fx-background-color: #f9f9f9;");
 
+        // custom back button implementation and spacing setup
         Button backButton = BackButton.createBackButton(primaryStage);
         Label titleLabel = new Label("Private Messaging");
         titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
@@ -41,12 +42,12 @@ public class PrivateMessagingPage {
 
         TabPane tabPane = new TabPane();
         
-        // Inbox Tab
+        // Inbox Tab to view messages 
         Tab inboxTab = new Tab("Inbox");
         inboxTab.setClosable(false);
         inboxTab.setContent(createInboxPane());
         
-        // Compose Tab
+        // Compose Tab to create message
         Tab composeTab = new Tab("Compose Message");
         composeTab.setClosable(false);
         composeTab.setContent(createComposePane());
@@ -58,7 +59,7 @@ public class PrivateMessagingPage {
         primaryStage.showScene(scene);
     }
     
-    // Inbox pane
+    // Inbox pane in function for readability 
     private VBox createInboxPane() {
         VBox inboxPane = new VBox(10);
         inboxPane.setPadding(new Insets(10));
@@ -67,6 +68,7 @@ public class PrivateMessagingPage {
         Label inboxLabel = new Label("Inbox Messages");
         inboxLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
         
+        // creates a list of all messages using an observable list to update dynamically
         ListView<PrivateMessage> inboxListView = new ListView<>();
         ObservableList<PrivateMessage> messages = FXCollections.observableArrayList(
                 databaseHelper.getPrivateMessagesForUser(currentUser.getUserName())
@@ -74,12 +76,13 @@ public class PrivateMessagingPage {
         inboxListView.setItems(messages);
         inboxListView.setPrefHeight(400);
         
-        // Display selected message details.
+        // Display selected message details such as username and message when clicked
         TextArea messageDetails = new TextArea();
         messageDetails.setEditable(false);
         messageDetails.setWrapText(true);
         messageDetails.setPrefHeight(150);
         
+        // on click listener to concatinate string
         inboxListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 messageDetails.setText("From: " + newVal.getSender() + "\nSubject: " + newVal.getSubject() + "\n\n" +
@@ -91,7 +94,7 @@ public class PrivateMessagingPage {
         return inboxPane;
     }
     
-    // Create Compose pane with a selection tool for recipients.
+    // Create Compose pane with a selection tool for recipients
     private VBox createComposePane() {
         VBox composePane = new VBox(10);
         composePane.setPadding(new Insets(10));
@@ -104,16 +107,16 @@ public class PrivateMessagingPage {
         recipientField.setPromptText("Select Recipient");
         recipientField.setEditable(false);
         
-        // Button to open a dialog for recipient selection
+        // Button to open dialog for recipient selection
         Button selectRecipientButton = new Button("Select Recipient");
         selectRecipientButton.setOnAction(e -> {
             try {
-                List<User> allUsers = databaseHelper.getUsers();
+                List<User> allUsers = databaseHelper.getUsers(); // gets list of users from database
                 
-                // Exclude the current user
+                // exclude the current user
                 List<User> recipients = allUsers.stream()
                         .filter(u -> !u.getUserName().equalsIgnoreCase(currentUser.getUserName()))
-                        .collect(Collectors.toList());
+                        .collect(Collectors.toList()); // filter function using stream
                 if (recipients.isEmpty()) {
                     showAlert("No users available.");
                     return;
@@ -121,20 +124,21 @@ public class PrivateMessagingPage {
                 // Convert to usernames
                 List<String> recipientNames = recipients.stream()
                         .map(User::getUserName)
-                        .collect(Collectors.toList());
-                ChoiceDialog<String> dialog = new ChoiceDialog<>(recipientNames.get(0), recipientNames);
+                        .collect(Collectors.toList()); // gets text username instead of java object
+                ChoiceDialog<String> dialog = new ChoiceDialog<>(recipientNames.get(0), recipientNames); // options for selection
                 dialog.setTitle("Select Recipient");
                 dialog.setHeaderText("Choose a recipient for your message:");
                 dialog.setContentText("Recipient:");
                 dialog.showAndWait().ifPresent(selected -> {
                     recipientField.setText(selected);
-                });
+                }); // text field
             } catch (SQLException ex) {
                 ex.printStackTrace();
                 showAlert("Error retrieving users.");
             }
         });
         
+        // boxes for aligning view
         HBox recipientBox = new HBox(10, recipientField, selectRecipientButton);
         recipientBox.setAlignment(Pos.CENTER);
         
@@ -154,11 +158,12 @@ public class PrivateMessagingPage {
                 showAlert("Please fill in recipient, subject, and message.");
                 return;
             }
-            PrivateMessage msg = new PrivateMessage(currentUser.getUserName(), recipient, subject, messageText);
+            // new private message object
+            PrivateMessage msg = new PrivateMessage(currentUser.getUserName(), recipient, subject, messageText); // creates a new message object
             boolean success = databaseHelper.insertPrivateMessage(msg);
             if (success) {
                 showAlert("Message sent.");
-                recipientField.clear();
+                recipientField.clear(); // reset fields
                 subjectField.clear();
                 messageArea.clear();
             } else {
@@ -166,11 +171,17 @@ public class PrivateMessagingPage {
             }
         });
         
-        composePane.getChildren().addAll(composeLabel, recipientBox, subjectField, messageArea, sendButton);
+        // add gui elements
+        composePane.getChildren().addAll(
+        		composeLabel, 
+        		recipientBox, 
+        		subjectField, 
+        		messageArea, 
+        		sendButton); 
         return composePane;
     }
     
-    private void showAlert(String message) {
+    private void showAlert(String message) { // alert confirmation
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Private Messaging");
         alert.setHeaderText(null);

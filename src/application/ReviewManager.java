@@ -32,18 +32,21 @@ public class ReviewManager {
         }
     }
 
+    // custom filter methods using stream and data mutations
     public static List<Review> getReviewsByReviewer(String reviewer) {
         return reviews.stream()
                       .filter(r -> r.getReviewer().equals(reviewer))
                       .collect(Collectors.toList());
     }
     
+    // custom filter methods using stream and data mutations
     public static List<Review> getReviewsForAnswer(String answerIdString) {
         return reviews.stream()
                       .filter(r -> r.getAnswerId().toString().equals(answerIdString))
                       .collect(Collectors.toList());
     }
     
+    // database helper method to add feedback
     public static void addPrivateFeedback(Review review, DatabaseHelper dbHelper) {
         review.setPrivateFeedbackCount(review.getPrivateFeedbackCount() + 1);
         dbHelper.updateReview(review);

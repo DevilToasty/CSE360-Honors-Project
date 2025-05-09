@@ -47,11 +47,11 @@ public class AdminSetupPage {
             
             String userName = userNameField.getText();
             UserNameRecognizer userTest = new UserNameRecognizer();
-            String userError = userTest.checkForValidUserName(userName);
+            String userError = userTest.checkForValidUserName(userName); // validate the username using custom methods
             
             String password = passwordField.getText();
             PasswordRecognizer passwordTest = new PasswordRecognizer();
-            String passwordError = passwordTest.evaluatePassword(password);
+            String passwordError = passwordTest.evaluatePassword(password); // validate the password using custom methods
             
             if (!userError.isEmpty() || !passwordError.isEmpty()) {
                 errorLabel.setText("Username error: " + userError + ". Password error: " + passwordError);

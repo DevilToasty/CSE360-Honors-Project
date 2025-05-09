@@ -118,6 +118,7 @@ public class QuestionManager {
         return false;
     }
     
+    // search method filters by keywords
     public List<Question> searchQuestionsByKeyword(String keyword) {
         List<Question> matching = new ArrayList<>();
         if (keyword == null || keyword.trim().isEmpty()) {

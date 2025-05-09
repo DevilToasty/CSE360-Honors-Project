@@ -39,6 +39,7 @@ public class TrustedReviewerEntry {
         return weight;
     }
 
+    // create a map of reviewers and add values of their scores
     public static List<TrustedReviewerEntry> fromApprovedReviewers(Map<String, Double> approvedReviewers) {
         List<TrustedReviewerEntry> list = new ArrayList<>();
         for (Map.Entry<String, Double> entry : approvedReviewers.entrySet()) {

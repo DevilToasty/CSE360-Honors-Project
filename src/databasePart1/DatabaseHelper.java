@@ -54,6 +54,7 @@ public class DatabaseHelper {
                 + "CONSTRAINT unique_email UNIQUE (email))";
         statement.execute(userTable);
 
+        // table for list of reviewers on each student 
         String approvedReviewersTable = "CREATE TABLE IF NOT EXISTS ApprovedReviewers ("
                 + "ownerUserName VARCHAR(255) NOT NULL, "
                 + "reviewerName VARCHAR(255) NOT NULL, "
@@ -61,17 +62,20 @@ public class DatabaseHelper {
                 + "PRIMARY KEY (ownerUserName, reviewerName))";
         statement.execute(approvedReviewersTable);
 
+        // invite codes
         String invitationCodesTable = "CREATE TABLE IF NOT EXISTS InvitationCodes ("
                 + "code VARCHAR(10) PRIMARY KEY, "
                 + "isUsed BOOLEAN DEFAULT FALSE)";
         statement.execute(invitationCodesTable);
 
+        // OTP setting 
         String userOTPAccess = "CREATE TABLE IF NOT EXISTS UserOTP ("
                 + "userName VARCHAR(255) UNIQUE, "
                 + "tempPassword VARCHAR(255), "
                 + "isUsed BOOLEAN DEFAULT FALSE)";
         statement.execute(userOTPAccess);
 
+        // list of questions to be converted to question objects
         String questionsTable = "CREATE TABLE IF NOT EXISTS Questions ("
                 + "id UUID PRIMARY KEY, "
                 + "author VARCHAR(255) NOT NULL, "
@@ -82,6 +86,7 @@ public class DatabaseHelper {
                 + "resolved BOOLEAN DEFAULT FALSE)";
         statement.execute(questionsTable);
 
+        // list of answers
         String answersTable = "CREATE TABLE IF NOT EXISTS Answers ("
                 + "id UUID PRIMARY KEY, "
                 + "questionId UUID NOT NULL, "
@@ -94,12 +99,14 @@ public class DatabaseHelper {
                 + "FOREIGN KEY (parentAnswerId) REFERENCES Answers(id))";
         statement.execute(answersTable);
 
+        // table to hold people who requested reviewer role
         String reviewerRequestTable = "CREATE TABLE IF NOT EXISTS ReviewerRequests ("
                 + "id UUID PRIMARY KEY, "
                 + "requestUser VARCHAR(255) NOT NULL, "
                 + "isApproved BOOLEAN DEFAULT NULL)";
         statement.execute(reviewerRequestTable);
 
+        // table to hold list of reviews on answers
         String reviewsTable = "CREATE TABLE IF NOT EXISTS Reviews ("
                 + "id UUID PRIMARY KEY, "
                 + "reviewText CLOB NOT NULL, "
@@ -110,6 +117,7 @@ public class DatabaseHelper {
                 + "previousReviewId UUID)";
         statement.execute(reviewsTable);
 
+        // private feedback from reviews
         String privateFeedbackTable = "CREATE TABLE IF NOT EXISTS PrivateFeedback ("
                 + "id UUID PRIMARY KEY, "
                 + "fromUser VARCHAR(255) NOT NULL, "
@@ -118,6 +126,7 @@ public class DatabaseHelper {
                 + "timestamp TIMESTAMP NOT NULL)";
         statement.execute(privateFeedbackTable);
 
+        // private messaging table
         String privateMessagesTable = "CREATE TABLE IF NOT EXISTS PrivateMessages ("
                 + "id UUID PRIMARY KEY, "
                 + "sender VARCHAR(255) NOT NULL, "
@@ -127,14 +136,16 @@ public class DatabaseHelper {
                 + "timestamp TIMESTAMP NOT NULL)";
         statement.execute(privateMessagesTable);
         
+        // stores question ID of flagged questions
         String flaggedQuestionsTable = "CREATE TABLE IF NOT EXISTS FlaggedQuestions ("
                 + "questionId UUID PRIMARY KEY, "      // each flagged question appears only once
                 + "flaggedBy VARCHAR(255) NOT NULL, "
                 + "flagTimestamp TIMESTAMP NOT NULL)";
         statement.execute(flaggedQuestionsTable);
 
+        // stores answer ID of flagged answers
         String flaggedAnswersTable = "CREATE TABLE IF NOT EXISTS FlaggedAnswers ("
-                + "answerId UUID PRIMARY KEY, "        // each flagged answer appears only once
+                + "answerId UUID PRIMARY KEY, "
                 + "flaggedBy VARCHAR(255) NOT NULL, "
                 + "flagTimestamp TIMESTAMP NOT NULL)";
         statement.execute(flaggedAnswersTable);
@@ -324,6 +335,7 @@ public class DatabaseHelper {
         return false;
     }
 
+    // checks if username is in user table
     public boolean doesUserExist(String userName) {
         String query = "SELECT COUNT(*) FROM cse360users WHERE userName = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -338,6 +350,7 @@ public class DatabaseHelper {
         return false;
     }
 
+    // deletes user from table
     public boolean deleteUser(String userName) {
         String query = "DELETE FROM cse360users WHERE userName = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -366,6 +379,7 @@ public class DatabaseHelper {
         return code;
     }
 
+    // checks if invite code exists and unused
     public boolean validateInvitationCode(String code) {
         String query = "SELECT * FROM InvitationCodes WHERE code = ? AND isUsed = FALSE";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -381,6 +395,7 @@ public class DatabaseHelper {
         return false;
     }
 
+    // updates invite table with used code
     private void markInvitationCodeAsUsed(String code) {
         String query = "UPDATE InvitationCodes SET isUsed = TRUE WHERE code = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -741,6 +756,7 @@ public class DatabaseHelper {
         return answers;
     }
     
+    // inserts username into reviewer request table
     public boolean addReviewerRequest(String username) {
         String query = "INSERT INTO ReviewerRequests (id, requestUser, isApproved) VALUES (?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -755,6 +771,7 @@ public class DatabaseHelper {
         }
     }
 
+    // sets true or false to reviewer request and updates their permissions as needed
     public boolean updateReviewerRequest(String username, boolean isApproved) {
         String query = "UPDATE ReviewerRequests SET isApproved = ? WHERE requestUser = ?"; 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -768,6 +785,7 @@ public class DatabaseHelper {
         }
     }
     
+    // returns list of requests
     public List<ReviewerRequest> getReviewerRequests() {
         List<ReviewerRequest> list = new ArrayList<>();
         String query = "SELECT * FROM ReviewerRequests WHERE isApproved IS NULL";
@@ -785,6 +803,7 @@ public class DatabaseHelper {
         return list;
     }
     
+    // creates new review
     public boolean insertReview(Review review) {
         String query = "INSERT INTO Reviews (id, reviewText, reviewer, answerId, timestamp, privateFeedbackCount, previousReviewId) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -807,6 +826,7 @@ public class DatabaseHelper {
         }
     }
 
+    // updates review
     public boolean updateReview(Review review) {
         String query = "UPDATE Reviews SET reviewText = ?, timestamp = ?, privateFeedbackCount = ?, previousReviewId = ? WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -828,6 +848,7 @@ public class DatabaseHelper {
         }
     }
 
+    // searches using UUID for specific review
     public Review getReviewById(UUID id) {
         String query = "SELECT * FROM Reviews WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -852,6 +873,7 @@ public class DatabaseHelper {
         return null;
     }
 
+    // returns all reviews by reviewer
     public List<Review> getReviewsByReviewer(String reviewer) {
         List<Review> reviewList = new ArrayList<>();
         String query = "SELECT * FROM Reviews WHERE reviewer = ?";
@@ -877,6 +899,7 @@ public class DatabaseHelper {
         return reviewList;
     }
     
+    // returns all reviews
     public List<Review> getAllReviews() {
         List<Review> reviews = new ArrayList<>();
         String query = "SELECT * FROM Reviews";
@@ -902,6 +925,7 @@ public class DatabaseHelper {
         return reviews;
     }
 
+    // private feedback system
     public boolean insertPrivateFeedback(String fromUser, String reviewer, String feedback) {
         String query = "INSERT INTO PrivateFeedback (id, fromUser, reviewer, feedback, timestamp) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -918,7 +942,12 @@ public class DatabaseHelper {
         }
     }
     
+ // adds reviewer (ensures correct permissions
     public boolean addApprovedReviewer(String ownerUserName, String reviewerName, double rating) {
+        if(!hasRole(ownerUserName, "admin")) {
+            System.err.println("You do not have permission to do this.");
+            return false;
+        }
         if(ownerUserName.equalsIgnoreCase(reviewerName)) {
             System.err.println("Cannot add yourself as a trusted reviewer.");
             return false;
@@ -962,6 +991,7 @@ public class DatabaseHelper {
         return list;
     }
     
+    // creates new private message
     public boolean insertPrivateMessage(PrivateMessage msg) {
         String query = "INSERT INTO PrivateMessages (id, sender, recipient, subject, message, timestamp) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -1023,7 +1053,7 @@ public class DatabaseHelper {
         return messages;
     }
     
-    
+    // adds question UUID to flagged table
     public boolean flagQuestion(UUID questionId, String flaggedBy) {
         String query = "INSERT INTO FlaggedQuestions (questionId, flaggedBy, flagTimestamp) VALUES (?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -1038,6 +1068,7 @@ public class DatabaseHelper {
         }
     }
 
+    // removes question ID from flagged table
     public boolean unflagQuestion(UUID questionId) {
         String query = "DELETE FROM FlaggedQuestions WHERE questionId = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -1050,6 +1081,7 @@ public class DatabaseHelper {
         }
     }
 
+    // returns if a question is flagged
     public boolean isQuestionFlagged(UUID questionId) {
         String query = "SELECT COUNT(*) FROM FlaggedQuestions WHERE questionId = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -1064,6 +1096,7 @@ public class DatabaseHelper {
         return false;
     }
 
+    // same as question
     public boolean flagAnswer(UUID answerId, String flaggedBy) {
         String query = "INSERT INTO FlaggedAnswers (answerId, flaggedBy, flagTimestamp) VALUES (?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -1078,6 +1111,7 @@ public class DatabaseHelper {
         }
     }
 
+    // same as question
     public boolean unflagAnswer(UUID answerId) {
         String query = "DELETE FROM FlaggedAnswers WHERE answerId = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -1090,6 +1124,7 @@ public class DatabaseHelper {
         }
     }
 
+    // same as question
     public boolean isAnswerFlagged(UUID answerId) {
         String query = "SELECT COUNT(*) FROM FlaggedAnswers WHERE answerId = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -1104,6 +1139,7 @@ public class DatabaseHelper {
         return false;
     }
 
+    // returns all flagged questions ID
     public List<UUID> getAllFlaggedQuestionIds() {
         List<UUID> ids = new ArrayList<>();
         String query = "SELECT questionId FROM FlaggedQuestions";
@@ -1118,6 +1154,7 @@ public class DatabaseHelper {
         return ids;
     }
 
+    // returns all flagged answers ID
     public List<UUID> getAllFlaggedAnswerIds() {
         List<UUID> ids = new ArrayList<>();
         String query = "SELECT answerId FROM FlaggedAnswers";
@@ -1131,9 +1168,6 @@ public class DatabaseHelper {
         }
         return ids;
     }
-    
-    
-    
 
     public void closeConnection() {
         try {

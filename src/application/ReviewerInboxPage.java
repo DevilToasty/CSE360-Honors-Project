@@ -44,11 +44,12 @@ public class ReviewerInboxPage {
         contentBox.setPadding(new Insets(10));
         contentBox.setAlignment(Pos.TOP_CENTER);
 
+        // list of all messages
         Label inboxLabel = new Label("Private Feedback Received:");
         inboxLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         ListView<PrivateFeedback> inboxListView = new ListView<>();
         ObservableList<PrivateFeedback> messages = FXCollections.observableArrayList(
-                databaseHelper.getPrivateFeedbackForReviewer(currentUser.getUserName())
+                databaseHelper.getPrivateFeedbackForReviewer(currentUser.getUserName()) // database method to return list of messages
         );
         inboxListView.setItems(messages);
         inboxListView.setPrefHeight(400);

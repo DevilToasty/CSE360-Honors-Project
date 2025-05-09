@@ -10,10 +10,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
-/**
- * AdminOTPPage class represents the user interface for the admin user. This
- * page displays a simple welcome message for the admin.
- */
 
 public class AdminOTPPage {
 
@@ -23,11 +19,7 @@ public class AdminOTPPage {
 		this.databaseHelper = databaseHelper;
 	}
 
-	/**
-	 * Displays the OPT user setup page in the provided primary stage.
-	 * 
-	 * @param primaryStage The primary stage where the scene will be displayed.
-	 */
+	
 	public void show(CustomTrackedStage primaryStage) {
 		
     	System.out.println("User " + primaryStage.getUser() + " logged in.");

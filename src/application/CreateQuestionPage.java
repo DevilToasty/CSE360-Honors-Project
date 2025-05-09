@@ -86,6 +86,7 @@ public class CreateQuestionPage {
                 return;
             }
 
+            // ensure text is correct length
             if (wordCount < 10) {
                 errorLabel.setText("Question must be more than 10 words. Current word count: " + wordCount);
                 return;

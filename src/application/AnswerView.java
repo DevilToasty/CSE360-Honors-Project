@@ -30,6 +30,7 @@ public class AnswerView extends VBox {
 
     private Runnable refreshCallback; // callback to refresh the full view
 
+    // public constructor
     public AnswerView(Answer answer, Question question, QuestionManager questionManager, User currentUser, List<Answer> allAnswers, Runnable refreshCallback) {
         this.answer = answer;
         this.question = question;
@@ -156,6 +157,7 @@ public class AnswerView extends VBox {
         nestedRepliesContainer.setSpacing(5);
         nestedRepliesContainer.setPadding(new Insets(10, 0, 0, 20));
 
+        // add all GUI elements
         getChildren().addAll(
         		header, 
         		answerLabel, 
@@ -166,6 +168,7 @@ public class AnswerView extends VBox {
         		editContainer, 
         		nestedRepliesContainer);
 
+        // call method to load text
         loadNestedReplies();
     }
 

@@ -45,6 +45,7 @@ public class AdminUserManager {
         Label adminLabel = new Label("User Manager Page");
         adminLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         
+        // create a table to store user list
         TableView<User> tableView = createTableView();
         tableView.setItems(getUserData(databaseHelper));
         tableView.setMaxSize(600, 250);
@@ -55,6 +56,7 @@ public class AdminUserManager {
         BorderPane.setAlignment(backButton, Pos.TOP_LEFT);
         borderPane.setTop(backButton);
         
+        // for layout
         HBox manageButtons = new HBox(10);
         
         Button manageUserButton = new Button("Manage User");
@@ -111,6 +113,7 @@ public class AdminUserManager {
         primaryStage.showScene(userManagerScene);
     }
     
+    // helper method to decrease amount of code in main block. We can use this similar to our main stage show
     private void showManagementOverlay(VBox overlayPane, User user) {
         System.out.println("Managing " + user + ".");
         Label userInfoLabel = (Label) overlayPane.getChildren().get(0);
@@ -250,6 +253,7 @@ public class AdminUserManager {
         
         cancelButton.setOnAction(e -> root.getChildren().remove(roleOverlayPane));
         
+        // functions to edit user roles and call database methods
         saveButton.setOnAction(e -> {
             if (adminCheck.isSelected()) {
                 databaseHelper.addUserRole(userToUpdate.getUserName(), "Admin");
@@ -284,6 +288,7 @@ public class AdminUserManager {
 				e1.printStackTrace();
 			}
 			
+			// ensure we have at least 1 admin
 			if (databaseHelper.getAdminCount() < 1) {
                 databaseHelper.addUserRole(userToUpdate.getUserName(), "Admin");
                 messageLabel.setStyle("-fx-text-fill: red; -fx-font-size: 12px;");
@@ -305,7 +310,7 @@ public class AdminUserManager {
         return roleOverlayPane;
     }
 
-    
+    // overlay
     private VBox deleteUserConfirmationOverlayPane(TableView<User> tableView, User userToUpdate, StackPane root) {
         VBox deleteOverlayPane = new VBox(10);
         deleteOverlayPane.setStyle(
@@ -353,6 +358,7 @@ public class AdminUserManager {
         return deleteOverlayPane;
     }
     
+    // custom pane view to display invite code. 
     private VBox inviteUserCustomPane() {
         VBox layout = new VBox(10);
         layout.setStyle(
@@ -395,7 +401,7 @@ public class AdminUserManager {
         return layout;
     }
     
-    
+    // pass in methods to know the user to update
     private VBox resetPasswordOverlayPane(String userToUpdateUsername, StackPane root) {
         VBox layout = new VBox(10);
         layout.setStyle(
@@ -424,6 +430,7 @@ public class AdminUserManager {
 	
 			String tempPassword = tempPasswordField.getText();
 	
+			// ensure user exists
 			if (!databaseHelper.doesUserExist(userToUpdateUsername)) {
 				return;
 			}
@@ -452,6 +459,7 @@ public class AdminUserManager {
         return layout;
     }
     
+    // table to dispaly all user data
     private TableView<User> createTableView() {
         TableView<User> tableView = new TableView<>();
 
@@ -473,6 +481,7 @@ public class AdminUserManager {
         return tableView;
     }
 
+    // observable list to update data in real time
     private ObservableList<User> getUserData(DatabaseHelper databaseHelper) {
         try {
             return FXCollections.observableArrayList(databaseHelper.getUsers());

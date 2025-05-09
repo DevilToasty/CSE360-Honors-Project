@@ -29,11 +29,11 @@ public class QuestionView extends VBox {
         HBox header = new HBox(10);
         header.setAlignment(Pos.CENTER_LEFT);
         
-
         Label titleLabel = new Label(question.getTitle());
         titleLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
         header.getChildren().add(titleLabel);
         
+        // ensure user has permissions
         if (currentUser != null && hasPrivilege(currentUser) 
                 && databaseHelper.isQuestionFlagged(question.getId())) {
             Label flagMarker = new Label("\u2691"); // Unicode flag (you can change this to an icon image if you wish)

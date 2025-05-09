@@ -46,6 +46,7 @@ public class ReviewerHomePage {
             new ReviewerInboxPage(databaseHelper, questionManager, currentUser).show(primaryStage);
         });
 
+        // store list of reviewers to manage
         reviewsListView = new ListView<>();
         refreshReviewsList();
         root.setCenter(reviewsListView);

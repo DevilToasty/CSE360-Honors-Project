@@ -74,6 +74,7 @@ public class StaffMessageViewer {
         messageDetails.setWrapText(true);
         messageDetails.setPrefHeight(150);
         
+        // listener to know when message was selected to populate the text field
         inboxListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 messageDetails.setText("From: " + newVal.getSender() +
@@ -115,6 +116,7 @@ public class StaffMessageViewer {
                 showAlert("Please fill in recipient, subject, and message.");
                 return;
             }
+            // create new private message object with data
             PrivateMessage msg = new PrivateMessage(currentUser.getUserName(), recipient, subject, messageText);
             boolean success = databaseHelper.insertPrivateMessage(msg);
             if (success) {

@@ -33,7 +33,6 @@ public class UserResetPasswordPage {
 	    Label errorLabel = new Label();
 	    errorLabel.setStyle("-fx-text-fill: red; -fx-font-size: 12px;");
 	
-	
 	    // make a button to set password
 	    // when pressed it should have a success page
 	    // then force users to log in again.

@@ -10,11 +10,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
-/**
- * InvitePage class represents the page where an admin can generate an invitation code.
- * The invitation code is displayed upon clicking a button.
- */
-
 public class InvitationPage {
 
 	/**

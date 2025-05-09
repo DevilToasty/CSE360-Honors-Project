@@ -9,7 +9,7 @@ public class User {
     private String userName;
     private String password;
     private String email;
-    private String roles; // e.g., "Admin, Student, Instructor"
+    private String roles; // e.g., "Admin, Student, Instructor, Staff"
     private String name;
     private Map<String, Double> approvedReviewers; // maps reviewer username to rating (0.0 to 5.0)
 

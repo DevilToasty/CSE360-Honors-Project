@@ -8,9 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import java.util.Map;
 
-
 // might not be used
-
 
 public class ManageDiscussionPage {
 
@@ -34,7 +32,6 @@ public class ManageDiscussionPage {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #f9f9f9;");
         
-
         Button backButton = BackButton.createBackButton(primaryStage);
         Label titleLabel = new Label("Manage Discussion Settings");
         titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
@@ -71,7 +68,10 @@ public class ManageDiscussionPage {
             requestReviewerRoleButton.setVisible(false);
         }
         
-        profileSettingsSection.getChildren().addAll(profileLabel, rolesLabel, requestReviewerRoleButton);
+        profileSettingsSection.getChildren().addAll(
+        		profileLabel, 
+        		rolesLabel, 
+        		requestReviewerRoleButton);
         
         // Trusted Reviewers Section
         VBox trustedReviewersSection = new VBox(10);

@@ -28,6 +28,7 @@ public class EditAnswerBox extends VBox {
         
         wordCountLabel = new Label("Word count: 0");
         
+        // updates whenever new words are typed so we can dynamically update the counter
         textArea.textProperty().addListener((obs, oldText, newText) -> {
             int wordCount = newText.trim().isEmpty() ? 0 : newText.trim().split("\\s+").length;
             wordCountLabel.setText("Word count: " + wordCount);
@@ -44,7 +45,7 @@ public class EditAnswerBox extends VBox {
         sendButton = new Button("Save");
         sendButton.setOnAction(e -> {
             String text = textArea.getText().trim();
-            int wordCount = text.isEmpty() ? 0 : text.split("\\s+").length;
+            int wordCount = text.isEmpty() ? 0 : text.split("\\s+").length; // grammar formatting
             if (wordCount > 500 || wordCount < 1) {
                 wordCountLabel.setText("Word count must be less than 500 words.");
             } else {

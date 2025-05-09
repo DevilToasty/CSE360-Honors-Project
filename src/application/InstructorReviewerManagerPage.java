@@ -61,6 +61,7 @@ public class InstructorReviewerManagerPage {
         primaryStage.showScene(scene);
     }
 
+    // 
     private VBox createStudentPostsPane() {
         VBox pane = new VBox(15);
         pane.setPadding(new Insets(15));
@@ -181,6 +182,7 @@ public class InstructorReviewerManagerPage {
         return pane;
     }
 
+    // update list
     private void refreshReviewerRequests(ListView<ReviewerRequest> listView) {
         List<ReviewerRequest> requests = databaseHelper.getReviewerRequests();
         listView.getItems().clear();

@@ -28,6 +28,7 @@ public class EditQuestionBox extends VBox {
         
         wordCountLabel = new Label("Word count: 0");
         
+        // listener to update dynamically
         textArea.textProperty().addListener((obs, oldText, newText) -> {
             int wordCount = newText.trim().isEmpty() ? 0 : newText.trim().split("\\s+").length;
             wordCountLabel.setText("Word count: " + wordCount);

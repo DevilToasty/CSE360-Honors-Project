@@ -11,7 +11,7 @@ public class StartCSE360 extends Application {
     
     public StartCSE360() {
         try {
-            databaseHelper.connectToDatabase();  // Connect to the database before creating the manager
+            databaseHelper.connectToDatabase();  // connect to the database before creating the manager
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

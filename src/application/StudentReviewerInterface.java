@@ -109,6 +109,7 @@ public class StudentReviewerInterface {
             }
         });
 
+        // listener for selection
         reviewListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 reviewDetails.setText("Review: " + newVal.getReviewText() + "\nWritten By: " + newVal.getReviewer() + "\nLast updated: " + newVal.getTimestamp());
@@ -119,6 +120,7 @@ public class StudentReviewerInterface {
         return pane;
     }
 
+    // refresher method
     private void refreshAllReviews(ListView<Review> listView) {
         List<Review> allReviews = databaseHelper.getAllReviews();
         listView.getItems().clear();

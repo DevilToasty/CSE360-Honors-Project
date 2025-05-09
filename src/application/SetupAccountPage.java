@@ -46,6 +46,7 @@ public class SetupAccountPage {
             String password = passwordField.getText();
             String passwordError = PasswordRecognizer.evaluatePassword(password);
 
+            // ensure username and password are valid
             if (!userError.isEmpty() || !passwordError.isEmpty()) {
                 errorLabel.setText("Username error: " + userError + ". Password error: " + passwordError);
                 return;

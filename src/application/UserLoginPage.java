@@ -84,6 +84,7 @@ public class UserLoginPage {
             			}else {
             				String role = databaseHelper.getUserRoles(user.getUserName());
    
+            				// find which pages the user can access
             				if (role.contains("Student")) {
                             	new StudentHomePage(databaseHelper, questionManager, user).show(primaryStage);
             				} else if (role.contains("Admin")) {

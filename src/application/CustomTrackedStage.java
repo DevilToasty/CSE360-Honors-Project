@@ -28,6 +28,7 @@ public class CustomTrackedStage extends Stage {
         this.show();
     }
 
+    // custom method to go to last used page (using stack)
     public void goBack() {
         if (!sceneHistory.isEmpty()) {
             Scene previousScene = sceneHistory.pop();

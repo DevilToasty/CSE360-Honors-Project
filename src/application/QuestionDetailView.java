@@ -125,6 +125,7 @@ public class QuestionDetailView {
             contextMenu.getItems().addAll(editQuestion, deleteItem);
         }
         
+        // ensure requester has permission
         if (hasPrivilege(currentUser)) {
             MenuItem flagItem;
             if (databaseHelper.isQuestionFlagged(question.getId())) {
@@ -208,6 +209,7 @@ public class QuestionDetailView {
         primaryStage.showScene(scene);
     }
     
+    // helper method
     private boolean hasPrivilege(User currentUser2) {
 		if ((currentUser2.getRoles().contains("Admin") 
 				|| currentUser2.getRoles().contains("Instructor") 
@@ -216,6 +218,7 @@ public class QuestionDetailView {
 		return false;
 	}
 
+    // load list of questions
     private void loadAnswers() {
         answersContainer.getChildren().clear();
         List<Answer> answerList = question.getAnswers();
@@ -249,6 +252,7 @@ public class QuestionDetailView {
         }
     }
     
+    // helper method
     private String getHighestRole(String roles) {
         String[] roleOrder = {"Admin", "Instructor", "Staff", "Reviewer", "Student"};
         String[] userRoles = roles.split(",\\s*");

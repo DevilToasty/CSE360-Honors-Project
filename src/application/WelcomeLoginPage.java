@@ -47,6 +47,7 @@ public class WelcomeLoginPage {
         Label welcomeLabel = new Label("Select your role:");
         welcomeLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
+        // group of all role selection options
         ToggleGroup group = new ToggleGroup();
 
         if (databaseHelper.hasRole(username, "Admin")) {
